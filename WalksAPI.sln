@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalksAPI", "WalksAPI\WalksAPI.csproj", "{241266DA-9E8E-478E-AEB7-5BD1D6545222}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{241266DA-9E8E-478E-AEB7-5BD1D6545222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{241266DA-9E8E-478E-AEB7-5BD1D6545222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{241266DA-9E8E-478E-AEB7-5BD1D6545222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{241266DA-9E8E-478E-AEB7-5BD1D6545222}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CD87DAA-9AFB-4B2F-8D89-1EDBF05C5A3E}
+	EndGlobalSection
+EndGlobal
