@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
 using WalksAPI.Data;
@@ -74,6 +75,51 @@ namespace WalksAPI.Controllers
                 Code = regionDomainModel.Code,
             };
             return CreatedAtAction(nameof(GetById), new {id = regionDto.Id}, regionDto);
+        }
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto update)
+        {
+            var regionDomainModel = dbContext.regions.FirstOrDefault(r => r.Id == id);
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+            regionDomainModel.Name = update.Name;
+            regionDomainModel.Code = update.Code;
+            regionDomainModel.RegionImgUrl = update.RegionImgUrl;
+            dbContext.SaveChanges();
+
+            var regionDto = new RegionDto
+            {
+                Id = regionDomainModel.Id,
+                Name = regionDomainModel.Name,
+                Code = regionDomainModel.Code,
+                RegionImgUrl = regionDomainModel.RegionImgUrl,
+            };
+            return Ok(regionDto);
+        }
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var regionDomainModel = dbContext.regions.FirstOrDefault(r => r.Id == id);
+            if(regionDomainModel == null) 
+            {
+                return NotFound(); 
+            }
+            dbContext.regions.Remove(regionDomainModel);
+            dbContext.SaveChanges();
+
+            var regionDto = new RegionDto
+            {
+                Id = regionDomainModel.Id,
+                Name = regionDomainModel.Name,
+                Code = regionDomainModel.Code,
+                RegionImgUrl = regionDomainModel.RegionImgUrl,
+            };
+            return Ok(regionDto);
+
         }
     }
 }
