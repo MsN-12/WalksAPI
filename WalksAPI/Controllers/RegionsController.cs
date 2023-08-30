@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using WalksAPI.Data;
 using WalksAPI.Models.Domain;
 using WalksAPI.Models.DTO;
+using WalksAPI.Repositories;
 
 namespace WalksAPI.Controllers
 {
@@ -16,14 +17,17 @@ namespace WalksAPI.Controllers
     public class RegionsController : ControllerBase
     {
         private readonly DataBaseContext dbContext;
-        public RegionsController(DataBaseContext dbContext)
+        private readonly IRegionRepository regionRepository;
+
+        public RegionsController(DataBaseContext dbContext, IRegionRepository regionRepository)
         {
             this.dbContext = dbContext;
+            this.regionRepository = regionRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var regions = await dbContext.regions.ToListAsync();
+            var regions = await regionRepository.GetAllAsync();
 
             var regionsDto = new List<RegionDto>();
             foreach (var region in regions)
