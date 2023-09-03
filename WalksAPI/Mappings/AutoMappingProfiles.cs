@@ -1,6 +1,16 @@
-﻿namespace WalksAPI.Mappings
+﻿using WalksAPI.Models.Domain;
+using WalksAPI.Models.DTO;
+using AutoMapper;
+
+namespace WalksAPI.Mappings
 {
-    public class MappingProfiles
+    public class AutoMappingProfiles : Profile
     {
+        public AutoMappingProfiles() 
+        {
+            CreateMap<Region, RegionDto>().ReverseMap();
+            CreateMap<AddRegionRequestDto, Region>().ReverseMap();
+            CreateMap<UpdateRegionRequestDto, Region>().ReverseMap();
+        } 
     }
 }
