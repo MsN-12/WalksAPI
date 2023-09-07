@@ -19,13 +19,39 @@ namespace WalksAPI.Controllers
             this.mapper = mapper;
             this.walkRepository = walkRepository;
         }
+
         public async Task<IActionResult> Create([FromBody] AddWalksRequestDto addWalksRequestDto)
         {
             var walkDomainModel = mapper.Map<Walk>(addWalksRequestDto);
-            await walkRepository.CreateAsyc(walkDomainModel);
+            await walkRepository.CreateAsync(walkDomainModel);
 
             return Ok(mapper.Map<WalkDto>(walkDomainModel));
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var walkDomainModel = await walkRepository.GetAllAsync();
+
+            mapper.Map<List<WalkDto>>(walkDomainModel);
+            
+            return Ok();
+        }
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+        {
+            var walkDomainModel = await walkRepository.GetByIdAsync(id);
+
+            if (walkDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            mapper.Map<WalkDto>(walkDomainModel);
+
+            return Ok();
         }
     }
 }
