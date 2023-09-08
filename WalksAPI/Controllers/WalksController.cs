@@ -9,17 +9,18 @@ namespace WalksAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WalksContorller : ControllerBase
+    public class WalksController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly IWalkRepository walkRepository;
 
-        public WalksContorller(IMapper mapper, IWalkRepository walkRepository)
+        public WalksController(IMapper mapper, IWalkRepository walkRepository)
         {
             this.mapper = mapper;
             this.walkRepository = walkRepository;
         }
 
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddWalksRequestDto addWalksRequestDto)
         {
             var walkDomainModel = mapper.Map<Walk>(addWalksRequestDto);
@@ -34,9 +35,9 @@ namespace WalksAPI.Controllers
         {
             var walkDomainModel = await walkRepository.GetAllAsync();
 
-            mapper.Map<List<WalkDto>>(walkDomainModel);
             
-            return Ok();
+
+            return Ok(mapper.Map<List<WalkDto>>(walkDomainModel));
         }
         [HttpGet]
         [Route("{id:Guid}")]
@@ -49,9 +50,25 @@ namespace WalksAPI.Controllers
                 return NotFound();
             }
 
-            mapper.Map<WalkDto>(walkDomainModel);
+            return Ok(mapper.Map<WalkDto>(walkDomainModel)
+);
+        }
 
-            return Ok();
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateWalkRequestDto update)
+        {
+            var walkDomainModel = mapper.Map<Walk>(update);
+
+            walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
+
+            if (walkDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<WalkDto>(walkDomainModel)
+);
         }
     }
 }
