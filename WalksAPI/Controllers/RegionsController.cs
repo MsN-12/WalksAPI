@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
+using WalksAPI.CustomActionFilters;
 using WalksAPI.Data;
 using WalksAPI.Models.Domain;
 using WalksAPI.Models.DTO;
@@ -28,6 +29,7 @@ namespace WalksAPI.Controllers
             this.regionRepository = regionRepository;
             this.mapper = mapper;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -37,6 +39,7 @@ namespace WalksAPI.Controllers
          
             return Ok(regionsDto);
         }
+
         [HttpGet]
         [Route("{id:Guid}")]
         public async Task<IActionResult>GetById([FromRoute]Guid id) 
@@ -49,7 +52,9 @@ namespace WalksAPI.Controllers
             var regionsDto = mapper.Map <RegionDto>(region);
             return Ok(regionsDto);
         }
+
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto add)
         {
             var regionDomainModel = mapper.Map<Region>(add);
@@ -58,10 +63,12 @@ namespace WalksAPI.Controllers
 
             var regionDto = mapper.Map<RegionDto>(regionDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new {id = regionDto.Id}, regionDto);
+            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
         }
+
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto update)
         {
             var regionDomainModel = mapper.Map<Region>(update);
@@ -73,11 +80,10 @@ namespace WalksAPI.Controllers
                 return NotFound();
 
             }
-            var regionDto = mapper.Map<RegionDto> (regionDomainModel);
-            
-
+            var regionDto = mapper.Map<RegionDto>(regionDomainModel);
             return Ok(regionDto);
         }
+
         [HttpDelete]
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
