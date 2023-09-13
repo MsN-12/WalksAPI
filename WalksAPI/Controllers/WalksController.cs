@@ -32,9 +32,10 @@ namespace WalksAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery]string? filterQuery)
-        {
-            var walkDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery);
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery]string? filterQuery,
+            [FromQuery]string? sortBy, [FromQuery] bool isAscending)
+        { 
+            var walkDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending); 
 
             
 
