@@ -5,7 +5,7 @@ namespace WalksAPI.Data
 {
     public class DataBaseContext : DbContext
     {
-        public DataBaseContext(DbContextOptions options): base(options)
+        public DataBaseContext(DbContextOptions<DataBaseContext> options): base(options)
         {
             
         }
