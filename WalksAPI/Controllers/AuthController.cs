@@ -41,5 +41,23 @@ namespace WalksAPI.Controllers
             }
             return BadRequest("Something went wrong"); 
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
+            if (user == null)
+            {
+                return BadRequest("Username or password incorrect");
+            }
+            var result = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            if (result)
+            {
+
+
+                return Ok();
+            }
+        }
     }
 }
