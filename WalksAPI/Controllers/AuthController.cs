@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WalksAPI.Models.DTO;
+using WalksAPI.Repositories;
 
 namespace WalksAPI.Controllers
 {
@@ -10,10 +11,12 @@ namespace WalksAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly ITokenRepository tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
+            this.tokenRepository = tokenRepository;
         }
 
         [HttpPost]
@@ -47,17 +50,27 @@ namespace WalksAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
             var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
-            if (user == null)
+            if (user != null)
             {
-                return BadRequest("Username or password incorrect");
-            }
-            var result = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-            if (result)
-            {
+                var result = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
+                if (result)
+                {
+                    var roles = await userManager.GetRolesAsync(user);
 
-                return Ok();
+                    if (roles != null)
+                    {
+                        var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+
+                        var rsp = new LoginResponseDto
+                        {
+                            JwtToken = jwtToken,
+                        };
+                        return Ok(rsp);
+                    }
+                }
             }
+            return BadRequest("Username or password incorrect");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace WalksAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
             var regions = await regionRepository.GetAllAsync();
@@ -42,6 +44,7 @@ namespace WalksAPI.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult>GetById([FromRoute]Guid id) 
         {
             var region = await regionRepository.GetByIdAsync(id);
@@ -55,6 +58,7 @@ namespace WalksAPI.Controllers
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto add)
         {
             var regionDomainModel = mapper.Map<Region>(add);
@@ -69,6 +73,7 @@ namespace WalksAPI.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto update)
         {
             var regionDomainModel = mapper.Map<Region>(update);
@@ -86,6 +91,7 @@ namespace WalksAPI.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var regionDomainModel = await regionRepository.DeleteAsync(id);
