@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Text.Json;
 using WalksAPI.CustomActionFilters;
 using WalksAPI.Data;
 using WalksAPI.Models.Domain;
@@ -22,22 +23,28 @@ namespace WalksAPI.Controllers
         private readonly DataBaseContext dbContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
+        private readonly ILogger logger;
 
         public RegionsController(DataBaseContext dbContext,
-            IRegionRepository regionRepository, IMapper mapper)
+            IRegionRepository regionRepository, IMapper mapper, ILogger logger)
         {
             this.dbContext = dbContext;
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
         [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
+            //logger.LogInformation("GetAll Region Action Method was invoked");
+
             var regions = await regionRepository.GetAllAsync();
 
             var regionsDto = mapper.Map<List<RegionDto>>(regions);
+
+            //logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regions)}");
          
             return Ok(regionsDto);
         }
