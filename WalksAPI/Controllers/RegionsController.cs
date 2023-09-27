@@ -35,17 +35,17 @@ namespace WalksAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Reader")]
-        public async Task<IActionResult> GetAll()
+/*        [Authorize(Roles = "Reader")]
+*/        public async Task<IActionResult> GetAll()
         {
-            //logger.LogInformation("GetAll Region Action Method was invoked");
-
+/*            logger.LogInformation("GetAll Region Action Method was invoked");
+*/
             var regions = await regionRepository.GetAllAsync();
 
             var regionsDto = mapper.Map<List<RegionDto>>(regions);
 
-            //logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regions)}");
-         
+/*            logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regions)}");
+*/         
             return Ok(regionsDto);
         }
 
